@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 public class Produto {
@@ -13,9 +16,17 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
+	@NotEmpty(message = "Nome não pode ser vazio")
+	@Min(value = 4, message = "O tamanho mínimo para nome é 4")
+	@Max(value = 255)
 	private String nome;
+
+	@NotEmpty(message = "Quantidade não pode ser vazio")
+	@Min(value = 0,message = "Valor mínino para quantidade é 0")
+	@Max(value = 10000, message = "Valor máximo para quantidade é 1000")
 	private Integer qtd;
+
 	private Date dataCriacao;
 	
 	public Produto() {
@@ -27,8 +38,7 @@ public class Produto {
 		this.qtd = qtd;
 	}
 	
-	
-		
+
 	@Override
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", qtd=" + qtd + ", dataCriacao=" + dataCriacao + "]";
@@ -58,6 +68,7 @@ public class Produto {
 	public void setDataCriacao(Date dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
