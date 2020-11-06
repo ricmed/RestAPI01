@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProdutoServiceImpl implements ProdutoService{
@@ -23,22 +24,31 @@ public class ProdutoServiceImpl implements ProdutoService{
     }
 
     @Override
-    public Produto find() {
+    public Optional<Produto> find(Long id) {
+        return this.produtoRepository.findById(id);
+    }
+
+    @Override
+    public Produto create( Produto produto) {
+        return this.produtoRepository.save(produto);
+    }
+
+    @Override
+    public Produto update(Long id, Produto produto) {
+        Produto produtoExiste = this.produtoRepository.getOne(id);
+        if(produtoExiste != null){
+            produto.setId(produtoExiste.getId());
+            this.produtoRepository.save(produto);
+            return produto;
+        }
         return null;
     }
 
     @Override
-    public Produto create() {
-        return null;
-    }
+    public void delete(Long id) {
+        Produto produto = this.produtoRepository.getOne(id);
+        if (produto != null)  this.produtoRepository.delete(produto);
 
-    @Override
-    public Produto update() {
-        return null;
-    }
-
-    @Override
-    public void delete() {
 
     }
 }
