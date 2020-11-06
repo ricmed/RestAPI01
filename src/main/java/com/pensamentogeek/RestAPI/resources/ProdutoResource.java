@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -22,19 +21,22 @@ public class ProdutoResource {
     private ProdutoService produtoService;
 
     public ProdutoResource(ProdutoService produtoService) {
+
         this.produtoService = produtoService;
     }
 
     @GetMapping
     @ResponseBody
-    public List<Produto> findAll() {
-        return this.produtoService.findAll() ;
+    public ResponseEntity<?> findAll() {
+        List<Produto> list = this.produtoService.findAll();
+        return new ResponseEntity<List>(list, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public Optional<Produto> find(@PathVariable(value = "id") Long id){
-        return this.produtoService.find(id);
+    public ResponseEntity<?> find(@PathVariable(value = "id") Long id){
+        Optional<Produto> produto = this.produtoService.find(id);
+        return new ResponseEntity<Produto>( produto.get(), HttpStatus.OK);
 
     }
 
@@ -73,9 +75,8 @@ public class ProdutoResource {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable(value= "id") Long id, HttpServletResponse response){
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable(value= "id") Long id){
         this.produtoService.delete(id);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-
     }
 }

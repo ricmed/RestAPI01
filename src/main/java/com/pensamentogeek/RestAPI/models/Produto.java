@@ -2,29 +2,23 @@ package com.pensamentogeek.RestAPI.models;
 
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 
 @Entity
 public class Produto {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@NotEmpty(message = "Nome não pode ser vazio")
-	@Min(value = 4, message = "O tamanho mínimo para nome é 4")
-	@Max(value = 255)
+	@Size(min = 4, max = 255, message = "O tamanho do campo nome deve ficar entre 4 e 255")
 	private String nome;
 
-	@NotEmpty(message = "Quantidade não pode ser vazio")
 	@Min(value = 0,message = "Valor mínino para quantidade é 0")
 	@Max(value = 10000, message = "Valor máximo para quantidade é 1000")
+	@NotNull(message = "Não pode ser nulo")
 	private Integer qtd;
 
 	private Date dataCriacao;
@@ -38,6 +32,12 @@ public class Produto {
 		this.qtd = qtd;
 	}
 	
+	@PrePersist
+	public void onPrePesist(){
+		if(this.dataCriacao == null){
+			this.dataCriacao = new Date();
+		}
+	}
 
 	@Override
 	public String toString() {
